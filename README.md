@@ -2,12 +2,6 @@
 
 ### Desafio criado por Lucas Carrilho - [@devmagro](https://www.linkedin.com/in/karilho/)
 
-Twitter: [@devmagro 🐦 ](https://x.com/devmagro)
-
-Instagram: [@devmagro 📸](https://instagram.com/devmagro)
-
-YouTube: [@devmagro 🎥](https://www.youtube.com/@devmagro)
-
 ## Introdução
 Você chegou ao **primeiro grande desafio do guia**! 😎 Agora, é hora de colocar a mão na massa e aplicar seus conhecimentos na prática, criando um **Sistema de Adoção para Pets!**
 
