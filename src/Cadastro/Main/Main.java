@@ -1,9 +1,6 @@
 package Cadastro.Main;
 
-import Cadastro.Dominio.Endereco;
-import Cadastro.Dominio.Pet;
-import Cadastro.Dominio.Sexo;
-import Cadastro.Dominio.Tipo;
+import Cadastro.Dominio.*;
 import Cadastro.Servico.LerFormularioDeCadastro;
 import Cadastro.Servico.MenuInicialCadastro;
 import Cadastro.Servico.RespostaMenu;
@@ -46,6 +43,10 @@ public class Main {
                     System.out.print("\n1 - Qual o nome e sobrenome do pet?");
                     String nomeCompleto = input.nextLine();
 
+                    if (nomeCompleto.equals("")){
+                        pet.setNome(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+                        break;
+                    }
                     if (!ValidacaoNome.hasNomeSobrenome(nomeCompleto)) {
                         System.out.println("Nome deve conter apenas Letras!\nTente Novamente:");
                         continue;
@@ -61,6 +62,12 @@ public class Main {
             while (true) {
                 System.out.print("\n2 - Qual o tipo do pet (Cachorro/Gato)?");
                 String tipo = input.nextLine();
+
+                if (tipo.equals("")) {
+                    pet.setTipo(Tipo.TIPO_NAO_INFORMADO);
+                    break;
+                }
+
                 if (!tipo.equalsIgnoreCase("cachorro") && !tipo.equalsIgnoreCase("gato")) {
                     System.out.println("tipo invalido");
                     continue;
@@ -75,6 +82,11 @@ public class Main {
             while (true) {
                 System.out.print("\n3 - Qual o sexo do animal (Macho/Femea)?");
                 String sexo = input.nextLine();
+
+                if (sexo.equals("")) {
+                    pet.setSexo(Sexo.SEXO_NAO_INFORMADO);
+                    break;
+                }
                 if (!sexo.equalsIgnoreCase("macho") && !sexo.equalsIgnoreCase("femea")) {
                     System.out.println("sexo invalido");
                     continue;
@@ -86,20 +98,50 @@ public class Main {
                 break;
             }
 
+
+            Endereco endereco = new Endereco();
+
             System.out.println("\n4 - Qual endereço e bairro que ele foi encontrado?");
+
             System.out.print("I - Cidade: ");
             String cidade = input.nextLine();
+
             System.out.print("II - Rua: ");
             String rua = input.nextLine();
+
             System.out.print("III - Numero da Residencia: ");
             int numeroResidencia = input.nextInt();
+            input.nextLine();
 
-            Endereco endereco = new Endereco(cidade, rua, numeroResidencia);
+            if (cidade.equals("")) {
+                endereco.setCidade(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+            } else {
+                endereco.setCidade(cidade);
+            }
+
+            if (rua.equals("")) {
+                endereco.setRua(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+            } else {
+                endereco.setRua(rua);
+            }
+
+            if (numeroResidencia == 0) {
+                endereco.setNumeroResidencia(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+            } else {
+                endereco.setNumeroResidencia(numeroResidencia);
+            }
+
+            pet.setEndereco(endereco);
 
             while (true) {
                 try {
                     System.out.print("\n5 - Qual a idade aproximada do pet?");
                     String idadeEscrita = input.nextLine();
+
+                    if (idadeEscrita.equals("")) {
+                        pet.setIdade(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                        break;
+                    }
 
                     if (!idadeEscrita.matches("\\d+([\\.,]\\d+)?")) {
                         System.out.println("So pode conter digitos! ");
@@ -110,6 +152,28 @@ public class Main {
                     if (valorIdade > 20 || valorIdade < 0) {
                         throw new IllegalArgumentException();
                     }
+                    if (valorIdade == 0){
+                        while(true) {
+                            System.out.println("Quantos meses (1/12)?");
+                            int meses = input.nextInt();
+
+                            if(String.valueOf(meses).equals("")){
+                                pet.setMeses(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                                break;
+                            }
+
+                            if (meses < 1 || meses > 12) {
+                                System.out.println("So pode de 1 á 12 meses");
+                                System.out.println("Tente novamente: ");
+                                continue;
+                            }
+                            pet.setMeses(meses);
+                            break;
+                        }
+                        break;
+                    }
+
+                    pet.setIdade(valorIdade);
                     break;
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
@@ -123,6 +187,11 @@ public class Main {
                     System.out.print("\n6 - Qual o peso aproximado do pet?");
                     String pesoEscrito = input.nextLine();
 
+                    if (pesoEscrito.equals("")) {
+                        pet.setPeso(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                        break;
+                    }
+
                     if (!pesoEscrito.matches("\\d+([\\.,]\\d+)?")) {
                         System.out.println("So pode conter digitos! ");
                         System.out.println("Tente novamente: ");
@@ -132,6 +201,8 @@ public class Main {
                     if (valorPeso > 60 || valorPeso < 0.5) {
                         throw new IllegalArgumentException();
                     }
+
+                    pet.setPeso(valorPeso);
                     break;
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
@@ -139,6 +210,27 @@ public class Main {
                     System.out.println("Digite novamente: ");
                 }
             }
+
+            while (true) {
+                System.out.print("\n7 - Qual a raça do pet?");
+                String raca = input.nextLine();
+
+                if (raca.equals("")) {
+                    pet.setRaca(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+                    break;
+                }
+
+                if (!raca.matches("[a-zA-Z]+")) {
+                    System.out.println("Não poderá usar números nem caracteres especiais! ");
+                    System.out.println("Tente novamente: ");
+                    continue;
+                }
+                pet.setRaca(raca);
+                break;
+            }
+
+            System.out.println(pet.toString());
+
         }
     }
 }

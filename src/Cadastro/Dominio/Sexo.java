@@ -2,7 +2,8 @@ package Cadastro.Dominio;
 
 public enum Sexo {
     MACHO(1, "Macho"),
-    FEMEA(2, "Femea");
+    FEMEA(2, "Femea"),
+    SEXO_NAO_INFORMADO(3, "Sexo nao informado");
 
     public final int NUMBER_SEXO;
     public final String NAME_SEXO;

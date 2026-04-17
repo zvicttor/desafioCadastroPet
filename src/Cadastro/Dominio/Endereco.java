@@ -5,10 +5,21 @@ public class Endereco {
     private String rua;
     private int numeroResidencia;
 
+    public Endereco(){}
+
     public Endereco(String cidade, String rua, int numeroResidencia) {
         this.cidade = cidade;
         this.rua = rua;
         this.numeroResidencia = numeroResidencia;
+    }
+
+    @Override
+    public String toString() {
+        return "Endereco{" +
+                "cidade='" + cidade + '\'' +
+                ", rua='" + rua + '\'' +
+                ", numeroResidencia=" + numeroResidencia +
+                '}';
     }
 
     public String getCidade() {

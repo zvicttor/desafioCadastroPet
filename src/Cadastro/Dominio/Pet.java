@@ -6,6 +6,7 @@ public class Pet {
     private Sexo sexo;
     private Endereco endereco;
     private double idade;
+    private int meses;
     private double peso;
     private String raca;
 
@@ -21,8 +22,34 @@ public class Pet {
         this.raca = raca;
     }
 
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "nome='" + nome + '\'' +
+                ", tipo=" + tipo +
+                ", sexo=" + sexo +
+                ", endereco=" + endereco +
+                ", idade=" + idade +
+                ", meses=" + meses +
+                ", peso=" + peso +
+                ", raca='" + raca + '\'' +
+                '}';
+    }
+
+    public int getMeses() {
+        return meses;
+    }
+
+    public void setMeses(int meses) {
+        this.meses = meses;
+    }
+
     public Endereco getEndereco() {
         return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 
     public double getIdade() {
