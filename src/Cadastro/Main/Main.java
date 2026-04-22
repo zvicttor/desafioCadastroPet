@@ -7,6 +7,12 @@ import Cadastro.Servico.RespostaMenu;
 import Cadastro.Servico.ValidacaoNome;
 
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -135,7 +141,7 @@ public class Main {
 
             while (true) {
                 try {
-                    System.out.print("\n5 - Qual a idade aproximada do pet?");
+                    System.out.print("\n5 - Qual a idade aproximada do pet (Se for meses, digite 0)?");
                     String idadeEscrita = input.nextLine();
 
                     if (idadeEscrita.equals("")) {
@@ -154,8 +160,9 @@ public class Main {
                     }
                     if (valorIdade == 0){
                         while(true) {
-                            System.out.println("Quantos meses (1/12)?");
+                            System.out.print("Quantos meses (1/12)?");
                             int meses = input.nextInt();
+                            input.nextLine();
 
                             if(String.valueOf(meses).equals("")){
                                 pet.setMeses(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
@@ -220,7 +227,7 @@ public class Main {
                     break;
                 }
 
-                if (!raca.matches("[a-zA-Z]+")) {
+                if (!raca.matches("[a-zA-Z]+(\\s[a-zA-Z]+)*")) {
                     System.out.println("Não poderá usar números nem caracteres especiais! ");
                     System.out.println("Tente novamente: ");
                     continue;
@@ -229,8 +236,42 @@ public class Main {
                 break;
             }
 
-            System.out.println(pet.toString());
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'hhmm");
+            String s1 = localDateTime.format(formatter);
 
+            String nomeSemEspaco = pet.getNome().replaceAll("\\s+", "");
+
+            String nomeArquivo = s1 + nomeSemEspaco.toUpperCase() + ".txt";
+
+            File file = new File("C:\\Users\\Victo\\Documents\\DevVictor\\Projetos\\DesafioCadastroPet\\desafioCadastroPet\\src\\Cadastro\\PetCadastrados\\" + nomeArquivo);
+            try(FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw)){
+                file.createNewFile();
+                bw.write("1 - " + pet.getNome());
+                bw.newLine();
+                bw.write("2 - " + pet.getTipo().TIPO_NOME);
+                bw.newLine();
+                bw.write("3 - " + pet.getSexo().NAME_SEXO);
+                bw.newLine();
+                bw.write("4 - " + pet.getEndereco());
+                bw.newLine();
+
+                if(pet.getIdade() > 0){
+                    int idadeInteira = (int) pet.getIdade();
+                    bw.write("5 - " + idadeInteira + " anos");
+                    bw.newLine();
+                }else{
+                    bw.write("5 - Não completou 1 ano e tem: " + pet.getMeses() + " meses");
+                    bw.newLine();
+                }
+
+                bw.write("6 - " + pet.getPeso() + "Kg");
+                bw.newLine();
+                bw.write("7 - " + pet.getRaca());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

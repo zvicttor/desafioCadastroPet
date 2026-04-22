@@ -99,4 +99,5 @@ public class Pet {
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
     }
+
 }
