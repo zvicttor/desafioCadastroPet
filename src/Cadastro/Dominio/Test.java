@@ -1,5 +1,7 @@
 package Cadastro.Dominio;
 
+import Cadastro.Servico.ValidacaoNome;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -9,23 +11,31 @@ public class Test {
     static void main() {
         Scanner input = new Scanner(System.in);
         Pet pet = new Pet();
+        String nomeTemp;
+
         while (true) {
-            System.out.print("\n7 - Qual a raça do pet?");
-            String raca = input.nextLine();
+            try {
+                System.out.print("\n1 - Qual o nome e sobrenome do pet?");
+                String nomeCompleto = input.nextLine();
 
-            if (raca.equals("")) {
-                pet.setRaca(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+                if (nomeCompleto.equals("")){
+                    nomeTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA;
+                    break;
+                }
+                if (!ValidacaoNome.hasNomeSobrenome(nomeCompleto)) {
+                    System.out.println("Nome deve conter apenas Letras!\nTente Novamente:");
+                    continue;
+                }
+                nomeTemp = nomeCompleto;
                 break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Argumento Invalido! ");
+                System.out.println("Seu Pet deve ter apenas, Nome e Sobrenome");
             }
-
-            if (!raca.matches("[a-zA-Z]+(\\s[a-zA-Z]+)*")) {
-                System.out.println("Não poderá usar números nem caracteres especiais! ");
-                System.out.println("Tente novamente: ");
-                continue;
-            }
-            pet.setRaca(raca);
-            break;
         }
+
+        pet.setNome(nomeTemp);
+        System.out.println(" --> " + pet.getNome());
 
     }
 }

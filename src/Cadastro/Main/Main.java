@@ -1,24 +1,20 @@
 package Cadastro.Main;
 
 import Cadastro.Dominio.*;
-import Cadastro.Servico.LerFormularioDeCadastro;
-import Cadastro.Servico.MenuInicialCadastro;
-import Cadastro.Servico.RespostaMenu;
-import Cadastro.Servico.ValidacaoNome;
-
-
-import java.io.BufferedWriter;
+import Cadastro.Servico.*;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    static void main() {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        CadastrosPet cadastrosPet = new CadastrosPet();
+        Pet[] pets = new Pet[50];
+        cadastrosPet.setPet(pets);
+
         int respostaMenu = 0;
 
         while (true) {
@@ -41,8 +37,13 @@ public class Main {
         if (respostaMenu == 1) {
             LerFormularioDeCadastro.formulario();
             input.nextLine();
-
-            Pet pet = new Pet();
+            String nomeTemp;
+            Tipo tipoTemp;
+            Sexo sexoTemp;
+            double idadeTemp = 0;
+            int mesesTemp = 0;
+            double pesoTemp;
+            String racaTemp;
 
             while (true) {
                 try {
@@ -50,14 +51,14 @@ public class Main {
                     String nomeCompleto = input.nextLine();
 
                     if (nomeCompleto.equals("")){
-                        pet.setNome(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+                        nomeTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA;
                         break;
                     }
                     if (!ValidacaoNome.hasNomeSobrenome(nomeCompleto)) {
                         System.out.println("Nome deve conter apenas Letras!\nTente Novamente:");
                         continue;
                     }
-                    pet.setNome(nomeCompleto);
+                    nomeTemp = nomeCompleto;
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println("Argumento Invalido! ");
@@ -70,7 +71,7 @@ public class Main {
                 String tipo = input.nextLine();
 
                 if (tipo.equals("")) {
-                    pet.setTipo(Tipo.TIPO_NAO_INFORMADO);
+                    tipoTemp = Tipo.TIPO_NAO_INFORMADO;
                     break;
                 }
 
@@ -78,9 +79,9 @@ public class Main {
                     System.out.println("tipo invalido");
                     continue;
                 } else if (tipo.equalsIgnoreCase("cachorro")) {
-                    pet.setTipo(Tipo.CACHORRO);
+                    tipoTemp = Tipo.CACHORRO;
                 } else {
-                    pet.setTipo(Tipo.GATO);
+                    tipoTemp = Tipo.GATO;
                 }
                 break;
             }
@@ -90,16 +91,16 @@ public class Main {
                 String sexo = input.nextLine();
 
                 if (sexo.equals("")) {
-                    pet.setSexo(Sexo.SEXO_NAO_INFORMADO);
+                    sexoTemp = Sexo.SEXO_NAO_INFORMADO;
                     break;
                 }
                 if (!sexo.equalsIgnoreCase("macho") && !sexo.equalsIgnoreCase("femea")) {
                     System.out.println("sexo invalido");
                     continue;
                 } else if (sexo.equalsIgnoreCase("macho")) {
-                    pet.setSexo(Sexo.MACHO);
+                    sexoTemp = Sexo.MACHO;
                 } else {
-                    pet.setSexo(Sexo.FEMEA);
+                    sexoTemp = Sexo.FEMEA;
                 }
                 break;
             }
@@ -137,15 +138,13 @@ public class Main {
                 endereco.setNumeroResidencia(numeroResidencia);
             }
 
-            pet.setEndereco(endereco);
-
             while (true) {
                 try {
                     System.out.print("\n5 - Qual a idade aproximada do pet (Se for meses, digite 0)?");
                     String idadeEscrita = input.nextLine();
 
                     if (idadeEscrita.equals("")) {
-                        pet.setIdade(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                        idadeTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO;
                         break;
                     }
 
@@ -165,7 +164,7 @@ public class Main {
                             input.nextLine();
 
                             if(String.valueOf(meses).equals("")){
-                                pet.setMeses(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                                mesesTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO;
                                 break;
                             }
 
@@ -174,13 +173,13 @@ public class Main {
                                 System.out.println("Tente novamente: ");
                                 continue;
                             }
-                            pet.setMeses(meses);
+                            mesesTemp = meses;
                             break;
                         }
                         break;
                     }
 
-                    pet.setIdade(valorIdade);
+                    idadeTemp = valorIdade;
                     break;
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
@@ -195,7 +194,7 @@ public class Main {
                     String pesoEscrito = input.nextLine();
 
                     if (pesoEscrito.equals("")) {
-                        pet.setPeso(NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO);
+                        pesoTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO;
                         break;
                     }
 
@@ -209,7 +208,7 @@ public class Main {
                         throw new IllegalArgumentException();
                     }
 
-                    pet.setPeso(valorPeso);
+                    pesoTemp = valorPeso;
                     break;
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
@@ -223,7 +222,7 @@ public class Main {
                 String raca = input.nextLine();
 
                 if (raca.equals("")) {
-                    pet.setRaca(NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA);
+                    racaTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA;
                     break;
                 }
 
@@ -232,45 +231,24 @@ public class Main {
                     System.out.println("Tente novamente: ");
                     continue;
                 }
-                pet.setRaca(raca);
+                racaTemp = raca;
                 break;
             }
 
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'hhmm");
             String s1 = localDateTime.format(formatter);
-
-            String nomeSemEspaco = pet.getNome().replaceAll("\\s+", "");
-
+            String nomeSemEspaco = nomeTemp.replaceAll("\\s+", "");
             String nomeArquivo = s1 + nomeSemEspaco.toUpperCase() + ".txt";
 
             File file = new File("C:\\Users\\Victo\\Documents\\DevVictor\\Projetos\\DesafioCadastroPet\\desafioCadastroPet\\src\\Cadastro\\PetCadastrados\\" + nomeArquivo);
-            try(FileWriter fw = new FileWriter(file);
-                BufferedWriter bw = new BufferedWriter(fw)){
-                file.createNewFile();
-                bw.write("1 - " + pet.getNome());
-                bw.newLine();
-                bw.write("2 - " + pet.getTipo().TIPO_NOME);
-                bw.newLine();
-                bw.write("3 - " + pet.getSexo().NAME_SEXO);
-                bw.newLine();
-                bw.write("4 - " + pet.getEndereco());
-                bw.newLine();
+            CriarArquivoPet.criar(file, nomeTemp, tipoTemp, sexoTemp, endereco, idadeTemp, mesesTemp, pesoTemp, racaTemp);
 
-                if(pet.getIdade() > 0){
-                    int idadeInteira = (int) pet.getIdade();
-                    bw.write("5 - " + idadeInteira + " anos");
-                    bw.newLine();
-                }else{
-                    bw.write("5 - Não completou 1 ano e tem: " + pet.getMeses() + " meses");
-                    bw.newLine();
+            for (int i = 0; i < pets.length; i++) {
+                if(pets[i] == null){
+                    pets[i] = new Pet(nomeTemp, tipoTemp, sexoTemp, endereco, idadeTemp, mesesTemp, pesoTemp, racaTemp);
+                    break;
                 }
-
-                bw.write("6 - " + pet.getPeso() + "Kg");
-                bw.newLine();
-                bw.write("7 - " + pet.getRaca());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

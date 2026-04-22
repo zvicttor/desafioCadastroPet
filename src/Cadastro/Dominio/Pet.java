@@ -12,12 +12,13 @@ public class Pet {
 
     public Pet(){}
 
-    public Pet(String nome, Tipo tipo, Sexo sexo, Endereco endereco, double idade, double peso, String raca) {
+    public Pet(String nome, Tipo tipo, Sexo sexo, Endereco endereco, double idade, int meses, double peso, String raca) {
         this.nome = nome;
         this.tipo = tipo;
         this.sexo = sexo;
         this.endereco = endereco;
         this.idade = idade;
+        this.meses = meses;
         this.peso = peso;
         this.raca = raca;
     }
