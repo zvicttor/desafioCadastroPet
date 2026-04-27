@@ -2,7 +2,9 @@ package Cadastro.Main;
 
 import Cadastro.Dominio.*;
 import Cadastro.Servico.*;
-import java.io.File;
+
+import java.awt.*;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -50,7 +52,7 @@ public class Main {
                     System.out.print("\n1 - Qual o nome e sobrenome do pet?");
                     String nomeCompleto = input.nextLine();
 
-                    if (nomeCompleto.equals("")){
+                    if (nomeCompleto.equals("")) {
                         nomeTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA;
                         break;
                     }
@@ -157,13 +159,13 @@ public class Main {
                     if (valorIdade > 20 || valorIdade < 0) {
                         throw new IllegalArgumentException();
                     }
-                    if (valorIdade == 0){
-                        while(true) {
+                    if (valorIdade == 0) {
+                        while (true) {
                             System.out.print("Quantos meses (1/12)?");
                             int meses = input.nextInt();
                             input.nextLine();
 
-                            if(String.valueOf(meses).equals("")){
+                            if (String.valueOf(meses).equals("")) {
                                 mesesTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_NUMERO;
                                 break;
                             }
@@ -245,10 +247,228 @@ public class Main {
             CriarArquivoPet.criar(file, nomeTemp, tipoTemp, sexoTemp, endereco, idadeTemp, mesesTemp, pesoTemp, racaTemp);
 
             for (int i = 0; i < pets.length; i++) {
-                if(pets[i] == null){
+                if (pets[i] == null) {
                     pets[i] = new Pet(nomeTemp, tipoTemp, sexoTemp, endereco, idadeTemp, mesesTemp, pesoTemp, racaTemp);
                     break;
                 }
+            }
+        }
+        if (respostaMenu == 2) {
+
+            input.nextLine();
+            Tipo tipoTemp;
+            String nomeTemp;
+            String sobrenomeTemp;
+            Sexo sexoTemp;
+            double idadeTemp = 0;
+            double pesoTemp;
+            String racaTemp;
+            Endereco enderecoTemp;
+
+            while (true) {
+                System.out.println("O usuário poderá buscar o pet por:\n" +
+                        "Nome ou sobrenome\n" + "Sexo\n" + "Idade\n" + "Peso\n" + "Raça\n" + "Endereço");
+                System.out.println("Podendo combinar criterios, Exemplo (Idade e Peso)");
+                System.out.println("Deseja combinar criterios (Sim/Nao)? ");
+
+                String respostaCriterio = input.nextLine();
+
+                if (!respostaCriterio.equalsIgnoreCase("Sim") && !respostaCriterio.equalsIgnoreCase("Nao")) {
+                    System.out.println("Resposta Invalida! Tente Novamente: ");
+                    continue;
+                }
+
+                if (respostaCriterio.equalsIgnoreCase("Sim")) {
+                    System.out.print("Digite o Tipo do Animal: ");
+                    String tipo = input.nextLine();
+
+                    if (!tipo.equalsIgnoreCase("cachorro") && !tipo.equalsIgnoreCase("gato")) {
+                        System.out.println("Tipo invalido!");
+                        continue;
+                    } else if (tipo.equalsIgnoreCase("cachorro")) {
+                        tipoTemp = Tipo.CACHORRO;
+                    } else {
+                        tipoTemp = Tipo.GATO;
+                    }
+
+                    String criterio1;
+                    String criterio2;
+
+                    while (true) {
+                        System.out.print("Digite o primeiro criterio: ");
+                        criterio1 = input.nextLine();
+
+                        System.out.print("Digite o segundo criterio: ");
+                        criterio2 = input.nextLine();
+
+                        if (Pet.temAtributo(criterio1) == false && Pet.temAtributo(criterio2) == false) {
+                            System.out.println("Algum Criterio foi passado de forma invalida! Tente Novamente: ");
+                            continue;
+                        }
+                        break;
+                    }
+
+                    if (criterio1.equalsIgnoreCase("Nome") || criterio2.equalsIgnoreCase("Nome")) {
+                        System.out.println("entre com o Nome: ");
+                        nomeTemp = input.nextLine();
+
+                    }
+                    if (criterio1.equalsIgnoreCase("Sobrenome") || criterio2.equalsIgnoreCase("Sobrenome")) {
+                        System.out.println("entre com o Sobrenome: ");
+                        sobrenomeTemp = input.nextLine();
+
+                    }
+                    if (criterio1.equalsIgnoreCase("Sexo") || criterio2.equalsIgnoreCase("Sexo")) {
+                        System.out.println("entre com o Sexo do animal: ");
+                        String sexo = input.nextLine();
+
+                        while (true) {
+                            if (!sexo.equalsIgnoreCase("macho") && !sexo.equalsIgnoreCase("femea")) {
+                                System.out.println("sexo invalido");
+                                continue;
+                            } else if (sexo.equalsIgnoreCase("macho")) {
+                                sexoTemp = Sexo.MACHO;
+                            } else {
+                                sexoTemp = Sexo.FEMEA;
+                            }
+                            break;
+                        }
+                    }
+                    if (criterio1.equalsIgnoreCase("Idade") || criterio2.equalsIgnoreCase("Idade")) {
+                        System.out.println("Entre com a idade do animal: ");
+                        idadeTemp = input.nextDouble();
+                        input.nextLine();
+
+                    }
+                    if (criterio1.equalsIgnoreCase("Peso") || criterio2.equalsIgnoreCase("Peso")) {
+                        System.out.println("Entre com o peso do animal: ");
+                        pesoTemp = input.nextDouble();
+                        input.nextLine();
+
+                    }
+                    if (criterio1.equalsIgnoreCase("Raca") || criterio2.equalsIgnoreCase("Raca")) {
+                        System.out.println("Entre com a raca do animal: ");
+                        racaTemp = input.nextLine();
+
+                    }
+                    if (criterio1.equalsIgnoreCase("Endereco") || criterio2.equalsIgnoreCase("Endereco")) {
+                        System.out.print("I - Cidade: ");
+                        String cidade = input.nextLine();
+
+                        System.out.print("II - Rua: ");
+                        String rua = input.nextLine();
+
+                        System.out.print("III - Numero da Residencia: ");
+                        int numeroResidencia = input.nextInt();
+                        input.nextLine();
+
+                        enderecoTemp = new Endereco(cidade, rua, numeroResidencia);
+                    }
+                    break;
+                } else {
+                    System.out.println("Digite o Tipo do Animal: ");
+                    String tipo = input.nextLine();
+
+                    if (!tipo.equalsIgnoreCase("cachorro") && !tipo.equalsIgnoreCase("gato")) {
+                        System.out.println("Tipo invalido!");
+                        continue;
+                    } else if (tipo.equalsIgnoreCase("cachorro")) {
+                        tipoTemp = Tipo.CACHORRO;
+                    } else {
+                        tipoTemp = Tipo.GATO;
+                    }
+
+                    String criterio;
+
+                    while (true) {
+                        System.out.print("Digite 1 Criterio para busca: ");
+                        criterio = input.nextLine();
+                        if (Pet.temAtributo(criterio) == false) {
+                            System.out.println("O criterio foi passado de forma invalida! Tente Novamente: ");
+                            continue;
+                        }
+                        break;
+                    }
+
+                    if (criterio.equalsIgnoreCase("Nome")) {
+                        System.out.println("entre com o Nome: ");
+                        nomeTemp = input.nextLine();
+
+                    }
+                    if (criterio.equalsIgnoreCase("Sobrenome")) {
+                        System.out.println("entre com o Sobrenome: ");
+                        sobrenomeTemp = input.nextLine();
+
+                    }
+                    if (criterio.equalsIgnoreCase("Sexo")) {
+                        System.out.println("entre com o Sexo do animal: ");
+                        String sexo = input.nextLine();
+
+                        while (true) {
+                            if (!sexo.equalsIgnoreCase("macho") && !sexo.equalsIgnoreCase("femea")) {
+                                System.out.println("sexo invalido");
+                                continue;
+                            } else if (sexo.equalsIgnoreCase("macho")) {
+                                sexoTemp = Sexo.MACHO;
+                            } else {
+                                sexoTemp = Sexo.FEMEA;
+                            }
+                            break;
+                        }
+
+                    }
+                    if (criterio.equalsIgnoreCase("Idade")) {
+                        System.out.println("Entre com a idade do animal: ");
+                        idadeTemp = input.nextDouble();
+                        input.nextLine();
+
+                    }
+                    if (criterio.equalsIgnoreCase("Peso")) {
+                        System.out.println("Entre com o peso do animal: ");
+                        pesoTemp = input.nextDouble();
+                        input.nextLine();
+
+                    }
+                    if (criterio.equalsIgnoreCase("Raca")) {
+                        System.out.println("Entre com a raca do animal: ");
+                        racaTemp = input.nextLine();
+
+                    }
+                    if (criterio.equalsIgnoreCase("Endereco")) {
+                        System.out.print("I - Cidade: ");
+                        String cidade = input.nextLine();
+
+                        System.out.print("II - Rua: ");
+                        String rua = input.nextLine();
+
+                        System.out.print("III - Numero da Residencia: ");
+                        int numeroResidencia = input.nextInt();
+                        input.nextLine();
+
+                        enderecoTemp = new Endereco(cidade, rua, numeroResidencia);
+                    }
+                }
+
+                File pasta = new File("C:\\Users\\Victo\\Documents\\DevVictor\\Projetos\\DesafioCadastroPet\\desafioCadastroPet\\src\\Cadastro\\PetCadastrados");
+                File[] arquivos = pasta.listFiles();
+
+                if(arquivos == null){
+                    System.out.println("Nao existe pets Cadastrados! ");
+                    break;
+                }else{
+                    for (File arquivo : arquivos){
+                        try(BufferedReader br = new BufferedReader(new FileReader(arquivo))){
+                            String linha;
+                            while ((linha = br.readLine()) != null){
+                                //to lendo os arquivos, agora pensar apartir daqui
+                            }
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                break;
             }
         }
     }

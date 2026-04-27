@@ -23,6 +23,16 @@ public class Pet {
         this.raca = raca;
     }
 
+    public static boolean temAtributo(String criterio) {
+        return criterio.equalsIgnoreCase("nome") ||
+                criterio.equalsIgnoreCase("Sobrenome") ||
+                criterio.equalsIgnoreCase("Sexo") ||
+                criterio.equalsIgnoreCase("Idade") ||
+                criterio.equalsIgnoreCase("Peso") ||
+                criterio.equalsIgnoreCase("Raca") ||
+                criterio.equalsIgnoreCase("endereco");
+    }
+
     @Override
     public String toString() {
         return "Pet{" +
