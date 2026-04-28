@@ -1,0 +1,7 @@
+1 - Matheus Bidu
+2 - Cachorro
+3 - Macho
+4 - cidade: Itapevi, Rua: Vermelha, 21
+5 - 15 anos
+6 - 21.21Kg
+7 - PitBull
