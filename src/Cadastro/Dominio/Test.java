@@ -2,8 +2,15 @@ package Cadastro.Dominio;
 
 import Cadastro.Servico.ValidacaoNome;
 
+import javax.swing.text.DateFormatter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -13,29 +20,9 @@ public class Test {
         Pet pet = new Pet();
         String nomeTemp;
 
-        while (true) {
-            try {
-                System.out.print("\n1 - Qual o nome e sobrenome do pet?");
-                String nomeCompleto = input.nextLine();
+        String numeros = "012345";
 
-                if (nomeCompleto.equals("")){
-                    nomeTemp = NaoInformado.NAO_INFORMADO.INFORMACAO_ESCRITA;
-                    break;
-                }
-                if (!ValidacaoNome.hasNomeSobrenome(nomeCompleto)) {
-                    System.out.println("Nome deve conter apenas Letras!\nTente Novamente:");
-                    continue;
-                }
-                nomeTemp = nomeCompleto;
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Argumento Invalido! ");
-                System.out.println("Seu Pet deve ter apenas, Nome e Sobrenome");
-            }
-        }
-
-        pet.setNome(nomeTemp);
-        System.out.println(" --> " + pet.getNome());
-
+        System.out.println(numeros.substring(3));
     }
+
 }

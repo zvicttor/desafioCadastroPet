@@ -1,6 +1,8 @@
 package Cadastro.Dominio;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class CadastrosPet {
@@ -26,10 +28,11 @@ public class CadastrosPet {
         }
 
         if (resposta.equalsIgnoreCase("Sexo")) {
-            System.out.print("entre com o Sexo do animal: ");
-            String sexoTemp = input.nextLine();
-
+            String sexoTemp;
             while (true) {
+                System.out.print("entre com o Sexo do animal: ");
+                sexoTemp = input.nextLine();
+
                 if (!sexoTemp.equalsIgnoreCase("macho") && !sexoTemp.equalsIgnoreCase("femea")) {
                     System.out.println("Sexo invalido! (Macho/Femea)");
                     continue;
@@ -40,10 +43,12 @@ public class CadastrosPet {
         }
 
         if (resposta.equalsIgnoreCase("Idade")) {
-            System.out.print("Entre com a idade do animal: ");
-            String idadeEscritaTemp = input.nextLine();
+            String idadeEscritaTemp;
 
             while (true) {
+                System.out.print("Entre com a idade do animal: ");
+                idadeEscritaTemp = input.nextLine();
+
                 if (!idadeEscritaTemp.matches("\\d+([\\.,]\\d+)?")) {
                     System.out.println("So pode conter digitos! ");
                     System.out.println("Tente novamente: ");
@@ -78,12 +83,13 @@ public class CadastrosPet {
         }
 
         if (resposta.equalsIgnoreCase("Peso")) {
-            System.out.print("Entre com o peso do animal: ");
-            String pesoEscritoTemp = input.nextLine();
-
+            String pesoEscritoTemp;
             while (true) {
+                System.out.print("Entre com o peso do animal: ");
+                pesoEscritoTemp = input.nextLine();
+
                 if (!pesoEscritoTemp.matches("\\d+([\\.,]\\d+)?")) {
-                    System.out.println("So pode conter digitos! ");
+                    System.out.println("\nSo pode conter digitos! ");
                     System.out.println("Tente novamente: ");
                     continue;
                 }
@@ -98,29 +104,32 @@ public class CadastrosPet {
         }
 
         if (resposta.equalsIgnoreCase("Endereco")) {
-            System.out.print("Voce deseja buscar o endereco por Cidade ou a Rua? ");
-            String respostaEndereco = input.nextLine();
+            String respostaEndereco;
+            while (true) {
+                System.out.print("Voce deseja buscar o endereco por Cidade ou a Rua? ");
+                respostaEndereco = input.nextLine();
 
-            while (true){
-                if(!respostaEndereco.equalsIgnoreCase("Cidade") && !respostaEndereco.equalsIgnoreCase("Rua")){
-                    System.out.println("Resposta Invalida, Tente Novamente! (Cidade ou Rua)");
+                if (!respostaEndereco.equalsIgnoreCase("Cidade") && !respostaEndereco.equalsIgnoreCase("Rua")) {
+                    System.out.println("\nResposta Invalida, Tente Novamente! (Cidade ou Rua)");
                     continue;
                 }
                 break;
             }
-            if(respostaEndereco.equalsIgnoreCase("Cidade")){
+
+            if (respostaEndereco.equalsIgnoreCase("Cidade")) {
                 System.out.print("Entre com a Cidade: ");
                 return input.nextLine();
             }
-            if(respostaEndereco.equalsIgnoreCase("Rua")){
+            if (respostaEndereco.equalsIgnoreCase("Rua")) {
                 System.out.print("Entre com a Rua: ");
                 return input.nextLine();
             }
         }
-        return "Criterio não encontrado";
+
+        return "\nCriterio não encontrado";
     }
 
-    public static void findCriterion(String tipoPet, String criterio) {
+    public static void findCriterion(String tipoPet, String criterio, String dataCadastro) {
         File pasta = new File("C:\\Users\\Victo\\Documents\\DevVictor\\Projetos\\DesafioCadastroPet\\desafioCadastroPet\\src\\Cadastro\\PetCadastrados");
         File[] arquivos = pasta.listFiles();
 
@@ -129,20 +138,35 @@ public class CadastrosPet {
             return;
         }
 
-        System.out.println("LISTA DE PETS ENCONTRADOS (Criterio Usado: " + criterio + " ) ");
+        System.out.println("\nLISTA DE PETS ENCONTRADOS");
+        System.out.println("Criterio Utilizado: " + criterio.toUpperCase() + "\n");
         boolean hasOne = false;
 
+        int contadorResultados = 1;
         for (File arquivo : arquivos) {
             try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
                 String linha;
                 StringBuilder conteudoPet = new StringBuilder();
                 boolean findTipo = false;
                 boolean findCriterion = false;
+                boolean hasDate = arquivo.getName().contains(dataCadastro);
+                String dataBR = "N/A";
+
+                if(hasDate){
+                    LocalDate data = LocalDate.parse(dataCadastro, DateTimeFormatter.BASIC_ISO_DATE);
+                    DateTimeFormatter formatterBr = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    dataBR = data.format(formatterBr);
+                }
 
                 while ((linha = br.readLine()) != null) {
-                    conteudoPet.append(linha).append("\n");
+                    String dados = linha.substring(linha.indexOf("-") + 1).trim();
 
-                    if(linha.toLowerCase().contains(tipoPet.toLowerCase())){
+                    if(conteudoPet.length() > 0){
+                        conteudoPet.append(" - ");
+                    }
+                    conteudoPet.append(dados);
+
+                    if (linha.toLowerCase().contains(tipoPet.toLowerCase())) {
                         findTipo = true;
                     }
 
@@ -151,10 +175,15 @@ public class CadastrosPet {
                     }
                 }
 
-                if (findCriterion && findTipo) {
-                    System.out.println(conteudoPet.toString());
-                    System.out.println("-------------------------------------------------");
+                if (findCriterion && findTipo && hasDate) {
+                    System.out.println(contadorResultados + ". " + conteudoPet.toString() + " -> Data Cadastro: " + dataBR);
                     hasOne = true;
+                    contadorResultados++;
+                }
+                if (findCriterion && findTipo && dataCadastro.equals("-")) {
+                    System.out.println(contadorResultados + ". " + conteudoPet.toString());
+                    hasOne = true;
+                    contadorResultados++;
                 }
 
             } catch (IOException e) {
@@ -167,7 +196,7 @@ public class CadastrosPet {
         }
     }
 
-    public static void find2Criterion(String tipoPet, String criterio1, String criterio2) {
+    public static void find2Criterion(String tipoPet, String criterio1, String criterio2, String dataCadastro) {
         File pasta = new File("C:\\Users\\Victo\\Documents\\DevVictor\\Projetos\\DesafioCadastroPet\\desafioCadastroPet\\src\\Cadastro\\PetCadastrados");
         File[] arquivos = pasta.listFiles();
 
@@ -176,9 +205,11 @@ public class CadastrosPet {
             return;
         }
 
-        System.out.println("LISTA DE PETS ENCONTRADOS / Criterios Usados: " + criterio1 + " - " + criterio2);
+        System.out.println("\nLISTA DE PETS ENCONTRADOS");
+        System.out.println("Criterios Utilizados: " + criterio1.toUpperCase() + " - " + criterio2.toUpperCase() +"\n");
         boolean hasOne = false;
 
+        int contadorResultados = 1;
         for (File arquivo : arquivos) {
             try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
                 String linha;
@@ -186,26 +217,44 @@ public class CadastrosPet {
                 boolean findTipo = false;
                 boolean findCriterion1 = false;
                 boolean findCriterion2 = false;
+                boolean hasDate = arquivo.getName().contains(dataCadastro);
+                String dataBR = "N/A";
+
+                if(hasDate){
+                    LocalDate data = LocalDate.parse(dataCadastro, DateTimeFormatter.BASIC_ISO_DATE);
+                    DateTimeFormatter formatterBr = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    dataBR = data.format(formatterBr);
+                }
 
                 while ((linha = br.readLine()) != null) {
-                    conteudoPet.append(linha).append("\n");
+                    String dados = linha.substring(linha.indexOf("-") + 1).trim();
 
-                    if(linha.toLowerCase().contains(tipoPet.toLowerCase())){
+                    if(conteudoPet.length() > 0){
+                        conteudoPet.append(" - ");
+                    }
+                    conteudoPet.append(dados);
+
+                    if (linha.toLowerCase().contains(tipoPet.toLowerCase())) {
                         findTipo = true;
                     }
 
-                    if (linha.toLowerCase().contains(criterio1.toLowerCase()))  {
+                    if (linha.toLowerCase().contains(criterio1.toLowerCase())) {
                         findCriterion1 = true;
                     }
-                    if(linha.toLowerCase().contains(criterio2.toLowerCase())){
+                    if (linha.toLowerCase().contains(criterio2.toLowerCase())) {
                         findCriterion2 = true;
                     }
                 }
 
-                if (findCriterion1 && findCriterion2 && findTipo) {
-                    System.out.println(conteudoPet.toString());
-                    System.out.println("-------------------------------------");
+                if (findCriterion1 && findCriterion2 && findTipo && hasDate) {
+                    System.out.println(contadorResultados + ". " + conteudoPet.toString() + " -> Data Cadastro: " + dataBR);
                     hasOne = true;
+                    contadorResultados++;
+                }
+                if (findCriterion1 && findCriterion2 && findTipo && dataCadastro.equals("-")) {
+                    System.out.println(contadorResultados + ". " + conteudoPet.toString());
+                    hasOne = true;
+                    contadorResultados++;
                 }
 
             } catch (IOException e) {
